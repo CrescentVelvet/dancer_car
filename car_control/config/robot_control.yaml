@@ -17,3 +17,19 @@ car_model:
     type: effort_controllers/JointPositionController
     joint: joint_column_link3
     pid: {p: 100.0, i: 0.01, d: 10.0}
+  joint_right_front_wheel:
+    type: effort_controllers/JointPositionController
+    joint: joint_right_front_wheel
+    pid: {p: 100.0, i: 0.01, d: 10.0}
+  joint_right_back_wheel:
+    type: effort_controllers/JointPositionController
+    joint: joint_right_back_wheel
+    pid: {p: 100.0, i: 0.01, d: 10.0}
+  joint_left_front_wheel:
+    type: effort_controllers/JointPositionController
+    joint: joint_left_front_wheel
+    pid: {p: 100.0, i: 0.01, d: 10.0}
+  joint_left_back_wheel:
+    type: effort_controllers/JointPositionController
+    joint: joint_left_back_wheel
+    pid: {p: 100.0, i: 0.01, d: 10.0}

@@ -13,7 +13,11 @@
     args="joint_state_controller 
           joint_column_link1_controller 
           joint_column_link2_controller
-          joint_column_link3_controller"/>
+          joint_column_link3_controller
+          joint_right_front_wheel
+          joint_right_back_wheel
+          joint_left_front_wheel
+          joint_left_back_wheel"/>
 
   <!-- convert joint states to TF transforms for rviz, etc -->
   <node name="robot_state_publisher" 

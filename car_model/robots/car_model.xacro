@@ -157,7 +157,7 @@
     <child link="right_back_wheel" />
     <origin rpy="0 1.57075 1.57075" xyz="${-car_a/2+0.02} ${-car_b/2-0.01} 0" />
     <limit effort="100" velocity="100" />
-    <joint_properties damping="0" friction="0.0" />
+    <joint_properties damping="0" friction="1.0" />
   </joint>
 
   <!-- #################### -->
@@ -204,7 +204,7 @@
     <child link="left_front_wheel" />
     <origin rpy="0 1.57075 1.57075" xyz="${car_a/2-0.02} ${car_b/2+0.01} 0" />
     <limit effort="100" velocity="100" />
-    <joint_properties damping="0" friction="0.0" />
+    <joint_properties damping="0" friction="1.0" />
   </joint>
 
   <!-- #################### -->
@@ -251,7 +251,7 @@
     <child link="left_back_wheel" />
     <origin rpy="0 1.57075 1.57075" xyz="${-car_a/2+0.02} ${car_b/2+0.01} 0" />
     <limit effort="100" velocity="100" />
-    <joint_properties damping="0" friction="0.0" />
+    <joint_properties damping="0" friction="1.0" />
   </joint>
 
   <!-- #################### -->
@@ -300,7 +300,7 @@
     <child link="column_link1" />
     <origin xyz="${car_a/2-column_width} 0 ${car_c}" />
     <limit effort="100" velocity="100" />
-    <joint_properties damping="0" friction="0.0" />
+    <joint_properties damping="0" friction="1.0" />
   </joint>
 
   <!-- #################### -->
@@ -513,6 +513,54 @@
       <hardwareInterface>hardware_interface/EffortJointInterface</hardwareInterface>
     </joint>
     <actuator name="motor_column_link3">
+      <hardwareInterface>hardware_interface/EffortJointInterface</hardwareInterface>
+      <mechanicalReduction>50</mechanicalReduction>
+    </actuator>
+  </transmission>
+
+  <!-- #################### -->
+  <transmission name="tran_right_front_wheel">
+    <type>transmission_interface/SimpleTransmission</type>
+    <joint name="joint_right_front_wheel">
+      <hardwareInterface>hardware_interface/EffortJointInterface</hardwareInterface>
+    </joint>
+    <actuator name="motor_right_front_wheel">
+      <hardwareInterface>hardware_interface/EffortJointInterface</hardwareInterface>
+      <mechanicalReduction>50</mechanicalReduction>
+    </actuator>
+  </transmission>
+
+  <!-- #################### -->
+  <transmission name="tran_right_back_wheel">
+    <type>transmission_interface/SimpleTransmission</type>
+    <joint name="joint_right_back_wheel">
+      <hardwareInterface>hardware_interface/EffortJointInterface</hardwareInterface>
+    </joint>
+    <actuator name="motor_right_back_wheel">
+      <hardwareInterface>hardware_interface/EffortJointInterface</hardwareInterface>
+      <mechanicalReduction>50</mechanicalReduction>
+    </actuator>
+  </transmission>
+
+  <!-- #################### -->
+  <transmission name="tran_left_front_wheel">
+    <type>transmission_interface/SimpleTransmission</type>
+    <joint name="joint_left_front_wheel">
+      <hardwareInterface>hardware_interface/EffortJointInterface</hardwareInterface>
+    </joint>
+    <actuator name="motor_left_front_wheel">
+      <hardwareInterface>hardware_interface/EffortJointInterface</hardwareInterface>
+      <mechanicalReduction>50</mechanicalReduction>
+    </actuator>
+  </transmission>
+
+  <!-- #################### -->
+  <transmission name="tran_left_back_wheel">
+    <type>transmission_interface/SimpleTransmission</type>
+    <joint name="joint_left_back_wheel">
+      <hardwareInterface>hardware_interface/EffortJointInterface</hardwareInterface>
+    </joint>
+    <actuator name="motor_left_back_wheel">
       <hardwareInterface>hardware_interface/EffortJointInterface</hardwareInterface>
       <mechanicalReduction>50</mechanicalReduction>
     </actuator>
