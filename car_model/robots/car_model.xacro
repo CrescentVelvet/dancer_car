@@ -1,0 +1,571 @@
+<?xml version = "1.0"?>
+<robot name="car_model" xmlns:xacro="http://www.ros.org/wiki/xacro">
+
+  <xacro:property name="PI" value="3.1415926"/>
+  <xacro:property name="car_mass" value="100.0" />
+  <xacro:property name="car_a" value="0.25" />
+  <xacro:property name="car_b" value="0.16" />
+  <xacro:property name="car_c" value="0.05" />
+  <xacro:property name="wheel_mass" value="10.0" />
+  <xacro:property name="wheel_lenth" value="0.02" />
+  <xacro:property name="wheel_radius" value="0.025" />
+  <xacro:property name="column_width" value="0.02" />
+  <xacro:property name="column_height1" value="0.2" />
+  <xacro:property name="column_height2" value="0.1" />
+  <xacro:property name="column_height3" value="0.05" />
+  <xacro:property name="column_mass" value="10.0" />
+  <xacro:property name="camera_width" value="0.025" />
+
+  <!-- #################### -->
+  <link name="world_link">
+  </link>
+
+  <!-- #################### -->
+  <link name="car_body">
+
+    <collision>
+      <origin
+        xyz="0 0 ${car_c/2}"
+        rpy="0 0 0" />
+      <geometry>
+        <box size="${car_a} ${car_b} ${car_c}" />
+      </geometry>
+    </collision>
+
+    <visual>
+      <origin
+        xyz="0 0 ${car_c/2}"
+        rpy="0 0 0" />
+      <geometry>
+        <box size="${car_a} ${car_b} ${car_c}" />
+      </geometry>
+      <material name="blue">
+        <color rgba="0 0.5 0.8 1"/>
+      </material>
+    </visual>
+
+    <inertial>
+      <origin
+        xyz="0 0 ${car_c/2}"
+        rpy="0 0 0" />
+      <mass value="${car_mass}" />
+      <inertia
+        ixx="${car_mass / 12.0 * (car_b*car_b + car_c*car_c)}"
+        ixy="0.0"
+        ixz="0.0"
+        iyy="${car_mass / 12.0 * (car_a*car_a + car_c*car_c)}"
+        iyz="0.0"
+        izz="${car_mass / 12.0 * (car_a*car_a + car_b*car_b)}" />
+    </inertial>
+
+  </link>
+
+  <!-- #################### -->
+  <joint name="joint_world" type="fixed">
+    <parent link="world_link" />
+    <child link="car_body" />
+  </joint>
+
+  <!-- #################### -->
+  <link name="right_front_wheel">
+
+    <collision>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <cylinder length="${wheel_lenth}" radius="${wheel_radius}" />
+      </geometry>
+    </collision>
+
+    <inertial>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <mass value="${wheel_mass}" />
+      <inertia
+        ixx="${wheel_mass / 12.0 * (wheel_lenth*wheel_lenth + wheel_lenth*wheel_lenth)}"
+        ixy="0.0"
+        ixz="0.0"
+        iyy="${wheel_mass / 12.0 * (wheel_radius*wheel_radius + wheel_lenth*wheel_lenth)}"
+        iyz="0.0"
+        izz="${wheel_mass / 12.0 * (wheel_radius*wheel_radius + wheel_lenth*wheel_lenth)}" />
+    </inertial>
+
+    <visual>
+      <geometry>
+        <cylinder length="${wheel_lenth}" radius="${wheel_radius}" />
+      </geometry>
+      <material name="grey">
+        <color rgba="0.2 0.2 0.2 1.0"/>
+      </material>
+    </visual>
+
+  </link>
+
+  <!-- #################### -->
+  <joint name="joint_right_front_wheel" type="continuous">
+    <axis xyz="0 0 1" rpy="0 0 0" />
+    <parent link="car_body" />
+    <child link="right_front_wheel" />
+    <origin rpy="0 1.57075 1.57075" xyz="${car_a/2-0.02} ${-car_b/2-0.01} 0" />
+    <limit effort="100" velocity="100" />
+    <joint_properties damping="0" friction="0.0" />
+  </joint>
+
+  <!-- #################### -->
+  <link name="right_back_wheel">
+
+    <collision>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <cylinder length="${wheel_lenth}" radius="${wheel_radius}" />
+      </geometry>
+    </collision>
+
+    <inertial>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <mass value="${wheel_mass}" />
+      <inertia
+        ixx="${wheel_mass / 12.0 * (wheel_lenth*wheel_lenth + wheel_lenth*wheel_lenth)}"
+        ixy="0.0"
+        ixz="0.0"
+        iyy="${wheel_mass / 12.0 * (wheel_radius*wheel_radius + wheel_lenth*wheel_lenth)}"
+        iyz="0.0"
+        izz="${wheel_mass / 12.0 * (wheel_radius*wheel_radius + wheel_lenth*wheel_lenth)}" />
+    </inertial>
+
+    <visual>
+      <geometry>
+        <cylinder length="${wheel_lenth}" radius="${wheel_radius}" />
+      </geometry>
+      <material name="grey">
+        <color rgba="0.2 0.2 0.2 1.0"/>
+      </material>
+    </visual>
+
+  </link>
+
+  <!-- Camera -->
+  <joint name="joint_right_back_wheel" type="continuous">
+    <axis xyz="0 0 1" rpy="0 0 0" />
+    <parent link="car_body" />
+    <child link="right_back_wheel" />
+    <origin rpy="0 1.57075 1.57075" xyz="${-car_a/2+0.02} ${-car_b/2-0.01} 0" />
+    <limit effort="100" velocity="100" />
+    <joint_properties damping="0" friction="0.0" />
+  </joint>
+
+  <!-- #################### -->
+  <link name="left_front_wheel">
+
+    <collision>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <cylinder length="${wheel_lenth}" radius="${wheel_radius}" />
+      </geometry>
+    </collision>
+
+    <inertial>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <mass value="${wheel_mass}" />
+      <inertia
+        ixx="${wheel_mass / 12.0 * (wheel_lenth*wheel_lenth + wheel_lenth*wheel_lenth)}"
+        ixy="0.0"
+        ixz="0.0"
+        iyy="${wheel_mass / 12.0 * (wheel_radius*wheel_radius + wheel_lenth*wheel_lenth)}"
+        iyz="0.0"
+        izz="${wheel_mass / 12.0 * (wheel_radius*wheel_radius + wheel_lenth*wheel_lenth)}" />
+    </inertial>
+
+    <visual>
+      <geometry>
+        <cylinder length="${wheel_lenth}" radius="${wheel_radius}" />
+      </geometry>
+      <material name="grey">
+        <color rgba="0.2 0.2 0.2 1.0"/>
+      </material>
+    </visual>
+
+  </link>
+
+  <!-- #################### -->
+  <joint name="joint_left_front_wheel" type="continuous">
+    <axis xyz="0 0 1" rpy="0 0 0" />
+    <parent link="car_body" />
+    <child link="left_front_wheel" />
+    <origin rpy="0 1.57075 1.57075" xyz="${car_a/2-0.02} ${car_b/2+0.01} 0" />
+    <limit effort="100" velocity="100" />
+    <joint_properties damping="0" friction="0.0" />
+  </joint>
+
+  <!-- #################### -->
+  <link name="left_back_wheel">
+
+    <collision>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <cylinder length="${wheel_lenth}" radius="${wheel_radius}" />
+      </geometry>
+    </collision>
+
+    <inertial>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <mass value="${wheel_mass}" />
+      <inertia
+        ixx="${wheel_mass / 12.0 * (wheel_lenth*wheel_lenth + wheel_lenth*wheel_lenth)}"
+        ixy="0.0"
+        ixz="0.0"
+        iyy="${wheel_mass / 12.0 * (wheel_radius*wheel_radius + wheel_lenth*wheel_lenth)}"
+        iyz="0.0"
+        izz="${wheel_mass / 12.0 * (wheel_radius*wheel_radius + wheel_lenth*wheel_lenth)}" />
+    </inertial>
+
+    <visual>
+      <geometry>
+        <cylinder length="${wheel_lenth}" radius="${wheel_radius}" />
+      </geometry>
+      <material name="grey">
+        <color rgba="0.2 0.2 0.2 1.0"/>
+      </material>
+    </visual>
+
+  </link>
+
+  <!-- #################### -->
+  <joint name="joint_left_back_wheel" type="continuous">
+    <axis xyz="0 0 1" rpy="0 0 0" />
+    <parent link="car_body" />
+    <child link="left_back_wheel" />
+    <origin rpy="0 1.57075 1.57075" xyz="${-car_a/2+0.02} ${car_b/2+0.01} 0" />
+    <limit effort="100" velocity="100" />
+    <joint_properties damping="0" friction="0.0" />
+  </joint>
+
+  <!-- #################### -->
+  <link name="column_link1">
+
+    <collision>
+      <origin 
+        xyz="0 0 ${column_height1/2}" 
+        rpy="0 0 0"/>
+      <geometry>
+	<box size="${column_width} ${column_width} ${column_height1}"/>
+      </geometry>
+    </collision>
+
+    <visual>
+      <origin 
+        xyz="0 0 ${column_height1/2}" 
+        rpy="0 0 0"/>
+      <geometry>
+	<box size="${column_width} ${column_width} ${column_height1}"/>
+      </geometry>
+      <material name="brown">
+        <color rgba="0.4 0.4 0.3 1"/>
+      </material>
+    </visual>
+
+    <inertial>
+      <origin 
+        xyz="0 0 ${column_height1/2}" 
+        rpy="0 0 0"/>
+      <mass value="${column_mass}"/>
+      <inertia
+	  ixx="${column_mass / 12.0 * (column_width*column_width + column_height1*column_height1)}" 
+          ixy="0.0" 
+          ixz="0.0"
+	  iyy="${column_mass / 12.0 * (column_height1*column_height1 + column_width*column_width)}" 
+          iyz="0.0"
+	  izz="${column_mass / 12.0 * (column_width*column_width + column_width*column_width)}"/>
+    </inertial>
+
+  </link>
+
+  <joint name="joint_column_link1" type="continuous">
+    <axis xyz="0 1 0" rpy="0 0 0" />
+    <parent link="car_body" />
+    <child link="column_link1" />
+    <origin xyz="${car_a/2-column_width} 0 ${car_c}" />
+    <limit effort="100" velocity="100" />
+    <joint_properties damping="0" friction="0.0" />
+  </joint>
+
+  <!-- #################### -->
+  <link name="column_link2">
+
+    <collision>
+      <origin 
+        xyz="0 0 ${column_height2/2}" 
+        rpy="0 0 0"/>
+      <geometry>
+	<box size="${column_width} ${column_width} ${column_height2}"/>
+      </geometry>
+    </collision>
+
+    <visual>
+      <origin 
+        xyz="0 0 ${column_height2/2}" 
+        rpy="0 0 0"/>
+      <geometry>
+	<box size="${column_width} ${column_width} ${column_height2}"/>
+      </geometry>
+      <material name="deepgreen">
+        <color rgba="0 0.4 0.2 1"/>
+      </material>
+    </visual>
+
+    <inertial>
+      <origin 
+        xyz="0 0 ${column_height2/2}" 
+        rpy="0 0 0"/>
+      <mass value="${column_mass}"/>
+      <inertia
+	  ixx="${column_mass / 12.0 * (column_width*column_width + column_height2*column_height2)}" 
+          ixy="0.0" 
+          ixz="0.0"
+	  iyy="${column_mass / 12.0 * (column_height2*column_height2 + column_width*column_width)}" 
+          iyz="0.0"
+	  izz="${column_mass / 12.0 * (column_width*column_width + column_width*column_width)}"/>
+    </inertial>
+
+  </link>
+
+  <!-- #################### -->
+  <joint name="joint_column_link2" type="continuous">
+    <axis xyz="0 1 0" rpy="0 0 0" />
+    <parent link="column_link1" />
+    <child link="column_link2" />
+    <origin xyz="0 0 ${column_height1 - column_width}" />
+    <limit effort="100" velocity="100" />
+    <joint_properties damping="0" friction="0.0" />
+  </joint>
+
+  <!-- #################### -->
+  <link name="column_link3">
+
+    <collision>
+      <origin 
+        xyz="0 0 ${column_height3/2}" 
+        rpy="0 0 0"/>
+      <geometry>
+	<box size="${column_width} ${column_width} ${column_height3}"/>
+      </geometry>
+    </collision>
+
+    <visual>
+      <origin 
+        xyz="0 0 ${column_height3/2}" 
+        rpy="0 0 0"/>
+      <geometry>
+	<box size="${column_width} ${column_width} ${column_height3}"/>
+      </geometry>
+      <material name="green">
+        <color rgba="0 0.8 0.5 1"/>
+      </material>
+    </visual>
+
+    <inertial>
+      <origin 
+        xyz="0 0 ${column_height3/2}" 
+        rpy="0 0 0"/>
+      <mass value="${column_mass}"/>
+      <inertia
+	  ixx="${column_mass / 12.0 * (column_width*column_width + column_height3*column_height3)}" 
+          ixy="0.0" 
+          ixz="0.0"
+	  iyy="${column_mass / 12.0 * (column_height3*column_height3 + column_width*column_width)}" 
+          iyz="0.0"
+	  izz="${column_mass / 12.0 * (column_width*column_width + column_width*column_width)}"/>
+    </inertial>
+
+  </link>
+
+  <joint name="joint_column_link3" type="continuous">
+    <axis xyz="0 0 1" rpy="0 0 0" />
+    <parent link="column_link2" />
+    <child link="column_link3" />
+    <origin xyz="0 0 ${column_height2 - column_width}" />
+    <limit effort="100" velocity="100" />
+    <joint_properties damping="0" friction="0.0" />
+  </joint>
+
+  <!-- #################### -->
+  <link name="camera_link">
+
+    <collision>
+      <origin xyz="0 0 0" rpy="0 0 0" />
+      <geometry>
+	<box size="${camera_width} ${camera_width} ${camera_width}"/>
+      </geometry>
+    </collision>
+
+    <visual>
+      <origin xyz="0 0 0" rpy="0 0 0" />
+      <geometry>
+	<box size="${camera_width} ${camera_width} ${camera_width}"/>
+      </geometry>
+      <material name="red">
+        <color rgba="0.8 0 0 1"/>
+      </material>
+    </visual>
+
+    <inertial>
+      <mass value="1e-5" />
+      <origin xyz="0 0 0" rpy="0 0 0"/>
+      <inertia ixx="1e-6" ixy="0" ixz="0" iyy="1e-6" iyz="0" izz="1e-6" />
+    </inertial>
+
+  </link>
+
+  <!-- #################### -->
+  <joint name="joint_camera_link" type="fixed">
+    <origin xyz="0 0 ${column_height3}" rpy="${-PI/2} 0 ${-PI/2}"/>
+    <parent link="column_link3"/>
+    <child link="camera_link"/>
+  </joint>
+
+  <!-- #################### -->
+  <gazebo reference="car_body">
+    <material>Gazebo/Orange</material>
+  </gazebo>
+  <gazebo reference="right_front_wheel">
+    <mu1>0.2</mu1>
+    <mu2>0.2</mu2>
+    <material>Gazebo/Gray</material>
+  </gazebo>
+  <gazebo reference="right_back_wheel">
+    <mu1>0.2</mu1>
+    <mu2>0.2</mu2>
+    <material>Gazebo/Gray</material>
+  </gazebo>
+  <gazebo reference="left_front_wheel">
+    <mu1>0.2</mu1>
+    <mu2>0.2</mu2>
+    <material>Gazebo/Gray</material>
+  </gazebo>
+  <gazebo reference="left_back_wheel">
+    <mu1>0.2</mu1>
+    <mu2>0.2</mu2>
+    <material>Gazebo/Gray</material>
+  </gazebo>
+  <gazebo reference="column_link1">
+    <mu1>0.2</mu1>
+    <mu2>0.2</mu2>
+    <material>Gazebo/Green</material>
+  </gazebo>
+  <gazebo reference="column_link2">
+    <mu1>0.2</mu1>
+    <mu2>0.2</mu2>
+    <material>Gazebo/Blue</material>
+  </gazebo>
+  <gazebo reference="column_link3">
+    <mu1>0.2</mu1>
+    <mu2>0.2</mu2>
+    <material>Gazebo/Green</material>
+  </gazebo>
+  <gazebo reference="camera_link">
+    <mu1>0.2</mu1>
+    <mu2>0.2</mu2>
+    <material>Gazebo/Red</material>
+  </gazebo>
+
+  <!-- #################### -->
+  <transmission name="tran_column_link1">
+    <type>transmission_interface/SimpleTransmission</type>
+    <joint name="joint_column_link1">
+      <hardwareInterface>hardware_interface/EffortJointInterface</hardwareInterface>
+    </joint>
+    <actuator name="motor_column_link1">
+      <hardwareInterface>hardware_interface/EffortJointInterface</hardwareInterface>
+      <mechanicalReduction>50</mechanicalReduction>
+    </actuator>
+  </transmission>
+
+  <!-- #################### -->
+  <transmission name="tran_column_link2">
+    <type>transmission_interface/SimpleTransmission</type>
+    <joint name="joint_column_link2">
+      <hardwareInterface>hardware_interface/EffortJointInterface</hardwareInterface>
+    </joint>
+    <actuator name="motor_column_link2">
+      <hardwareInterface>hardware_interface/EffortJointInterface</hardwareInterface>
+      <mechanicalReduction>50</mechanicalReduction>
+    </actuator>
+  </transmission>
+
+  <!-- #################### -->
+  <transmission name="tran_column_link3">
+    <type>transmission_interface/SimpleTransmission</type>
+    <joint name="joint_column_link3">
+      <hardwareInterface>hardware_interface/EffortJointInterface</hardwareInterface>
+    </joint>
+    <actuator name="motor_column_link3">
+      <hardwareInterface>hardware_interface/EffortJointInterface</hardwareInterface>
+      <mechanicalReduction>50</mechanicalReduction>
+    </actuator>
+  </transmission>
+
+  <!-- #################### -->
+  <gazebo reference="camera_link">
+    <sensor type="camera" name="camera1">
+      <update_rate>30.0</update_rate>
+      <camera name="head">
+        <horizontal_fov>1.3962634</horizontal_fov>
+        <image>
+          <width>800</width>
+          <height>800</height>
+          <format>R8G8B8</format>
+        </image>
+        <clip>
+          <near>0.02</near>
+          <far>300</far>
+        </clip>
+        <noise>
+          <type>gaussian</type>
+          <mean>0.0</mean>
+          <stddev>0.007</stddev>
+        </noise>
+      </camera>
+      <plugin name="camera_controller" filename="libgazebo_ros_camera.so">
+        <alwaysOn>true</alwaysOn>
+        <updateRate>0.0</updateRate>
+        <cameraName>rrbot/camera1</cameraName>
+        <imageTopicName>image_raw</imageTopicName>
+        <cameraInfoTopicName>camera_info</cameraInfoTopicName>
+        <frameName>camera_link_optical</frameName>
+        <hackBaseline>0.0</hackBaseline>
+        <distortionK1>0.0</distortionK1>
+        <distortionK2>0.0</distortionK2>
+        <distortionK3>0.0</distortionK3>
+        <distortionT1>0.0</distortionT1>
+        <distortionT2>0.0</distortionT2>
+        <CxPrime>0</CxPrime>
+        <Cx>0.0</Cx>
+        <Cy>0.0</Cy>
+        <focalLength>0.0</focalLength>
+      </plugin>
+    </sensor>
+  </gazebo>
+
+  <!-- #################### -->
+  <gazebo>
+    <plugin name="gazebo_ros_control" filename="libgazebo_ros_control.so">
+      <robotNamespace>/car_model</robotNamespace>
+      <robotSimType>gazebo_ros_control/DefaultRobotHWSim</robotSimType>
+    </plugin>
+  </gazebo>
+
+</robot>
