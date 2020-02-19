@@ -1,39 +1,36 @@
-# dancer_car
+# **dancer_car**
 The control of four wheel car, mechanical arm and camera in rviz and gazebo
-
 # 使用指南
-
-## 将文件放入catkin_ws/src，终端中输入
+## 环境配置
+安装Ubuntu18.04，ros-melodic，gazebo
+将文件放入catkin_ws/src，终端中输入
 ```
 cd ~/catkin_ws/src
 catkin_make
 source devel/setup.bash
 ```
-
 ## rviz中运行
 ```
 roslaunch car_model display.launch
 ```
 Add RobotModule和camera，修改Fixed Frame为world_link，可以在gui上控制关节转动
-
 ## gazebo中运行
 ```
 roslaunch car_model gazebo.launch
 ```
-View Axis和Interia.gazebo运行时在rviz中camera的ImageTopic设置为camera，可以看见相机图像
+View Axis和Interia.gazebo运行时在rviz中camera的ImageTopic设置为camera
 
+可以看见相机图像
 ## control启动
 ```
 roslaunch car_control robot_control.launch
 ```
-
 ## 手动输入指令
 ```
 rostopic pub -1 /car_model/joint_column_link1_controller/command std_msgs/Float64 "data: 1.5"
 rostopic pub -1 /car_model/joint_column_link2_controller/command std_msgs/Float64 "data: 1.5"
 rostopic pub -1 /car_model/joint_column_link3_controller/command std_msgs/Float64 "data: 1.5"
 ```
-
 ## rqt发布指令
 ```
 rosrun rqt_gui rqt_gui
@@ -46,9 +43,7 @@ rosrun rqt_gui rqt_gui
 添加/car_model/joint_column_link3_controller/command
 设置frequency为100Hz，设置data为sin(i/50)
 在前面的框中打钩，可见小车运动
-
 ***
-
 # 错误提示
 ## catkin_make编译时
 ### 找不到effort_controllers
@@ -59,7 +54,6 @@ sudo apt-get install ros-melodic-effort-controllers
 ```
 sudo apt-get install ros-melodic-joint-state-publisher-gui
 ```
-
 ## rviz运行时
 ### 没有gui控制关节
 display.launch中<gui default="False" />修改为True
@@ -67,7 +61,6 @@ display.launch中<gui default="False" />修改为True
 display.launch中<type="state_publisher" />修改为robot_state_publisher
 ### 警告'use_gui' parameter was specified
 忽略
-
 ## gazebo运行时
 ### 找不到gazebo/spawn_model
 gazebo.launch中pkg="gazebo"修改为gazebo_ros
@@ -100,12 +93,12 @@ sudo apt-get install ros-melodic-effort-controllers
 ### 警告new node registered with same name
 节点名称冲突，删去gazebo.launch中的<include file="$(find pr2_controller_manager)/controller_manager.launch" />
 ### 警告找不到api.ignitionfuel.org
-home/.ignition/fuel/config.yaml中的URL行的https://api.ignitionfuel.org修改为https://api.ignitionrobotics.org
+home/.ignition/fuel/config.yaml中的URL行的api.ignitionfuel.org修改为api.ignitionrobotics.org
 ### 小车各个零部件固定在原点一动不动，或者小车狂舞乱飞无法无天
-质量、摩擦力设置不当
-### 报错 cmd /opt/ros/melodic/lib/gazebo_ros/spawn_model
-gazebo.launch中<args="-file $(find car_model)/robots/car_model.URDF-urdf -model car_model" />的URDF-urdf中间加个空格
-### 空gazebo中添加模型
+质量、摩擦力设置不当（可能过小）
+### 报错cmd /opt/ros/melodic/lib/gazebo_ros/spawn_model
+gazebo.launch中$(find car_model)/robots/car_model.URDF-urdf -model car_model"中间加个空格
+### 新建gazebo添加模型
 ```
 roslaunch gazebo_ros empty_world.launch
 ```
@@ -117,40 +110,41 @@ rosrun gazebo_ros spawn_model -file $(find car_model)/robots/car_model.URDF -urd
 ```
 rosrun gazebo_ros spawn_model -file $(find car_model)/robots/car_model.xacro -xacro -z 1 -model car_model.xacro
 ```
-
 ***
-
 # 附加信息
 ## SolidWorks生成urdf模型
 ### 插件安装
 github上有solidworks2urdf插件，但是原作者删除了exe版本，需要自己编译
+
 CSDN上可以下载exe版本
+
 安装在SolidWorks安装文件夹内即可
 ### 转轴配置
 对于装配体，选择file导出到urdf，在PropertyManager建立link和子link，选择对应的零部件
+
 在FeatureManager，选择Insert ReferenceGeometry，选择Axis轴，圆柱体中心线，重命名
 ### 坐标系
-在FeatureManager，选择Insert ReferenceGeometry，选择Point点，圆形中点，与转轴一起选中，插入Coordinate System，点击x轴前面的箭头调整方向，重命名
-在Preview and Export里把每个link对应的转轴与坐标系选择好，输出为文件夹
+在FeatureManager，选择Insert ReferenceGeometry，选择Point点，圆形中点
 
+与转轴一起选中，插入Coordinate System，点击x轴前面的箭头调整方向，重命名
+
+在Preview and Export里把每个link对应的转轴与坐标系选择好，输出为文件夹
 ## 检查urdf文件
 check_urdf <urdf>：检查urdf有无语法错误
+  
 urdf_to_graphiz <urdf>：生成gv和pdf两个图片文件展示urdf里的父子关系
+  
 gz sdf -p <urdf>：urdf转换为sdf文件
-
 ## 仿真模型
 ```
 catkin_create_pkg car_model joint_state_publisher robot_state_publisher rviz gazebo_plugins gazebo_ros gazebo_ros_control xacro gazebo car_control
-
 ```
 编写xacro文件和launch文件，link与joint，以及collision、visual、inertial
-
 ## 控制模型
 ```
 catkin_create_pkg car_control controller_manager joint_state_controller robot_state_publisher rqt_gui effort_controllers rviz gazebo_ros gazebo_plugins gazebo_ros_control xacro gazebo
 ```
 编写yaml文件和launch文件，gazebo reference、transmission、gazebo plugin
-
 ## 运行检查
 运行rviz和gazebo和control，
 ```
@@ -164,6 +158,7 @@ rostopic echo <topic>
 rostopic type <topic>
 ```
 列出所有node订阅和发布topic的信息
+
 查看node在指定topic上发布的数据及类型
 ```
 rosrun rqt_console rqt_console
@@ -172,4 +167,5 @@ rosrun rqt_console rqt_console
 
 ## 控制指令
 sin(i/rate*speed)*diff + offset
+
 rate是频率，speed是速度系数，diff是上下界之差，offset是上界减去diff
