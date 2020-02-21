@@ -31,18 +31,24 @@ rostopic pub -1 /car_model/joint_column_link1_controller/command std_msgs/Float6
 rostopic pub -1 /car_model/joint_column_link2_controller/command std_msgs/Float64 "data: 1.5"
 rostopic pub -1 /car_model/joint_column_link3_controller/command std_msgs/Float64 "data: 1.5"
 ```
-## rqt发布指令
+输入指令为转动关节角度的弧度值[-PI,PI]
+## rqt发布指令控制杆子转动
 ```
 rosrun rqt_gui rqt_gui
 ```
 在Topics中选择Message Publisher，
 添加/car_model/joint_column_link1_controller/command
-设置frequency为100Hz，设置data为sin(i/200)*0.2+0.2
+设置frequency为100Hz，设置data为sin(i/100)
 添加/car_model/joint_column_link2_controller/command
-设置frequency为100Hz，设置data为sin(i/100)*0.4
+设置frequency为100Hz，设置data为sin(i/100)*3
 添加/car_model/joint_column_link3_controller/command
 设置frequency为100Hz，设置data为sin(i/50)
-在前面的框中打钩，可见小车运动
+在前面的框中打钩，控制杆子转动
+## 键盘控制小车移动
+```
+rosrun teleop_twist_keyboard teleop_twist_keyboard.py 
+```
+
 ***
 # 错误提示
 ## catkin_make编译时
@@ -54,6 +60,8 @@ sudo apt-get install ros-melodic-effort-controllers
 ```
 sudo apt-get install ros-melodic-joint-state-publisher-gui
 ```
+### 找不到gazebo
+CMakeLists.txt和package.xml中删去gazebo相关内容
 ## rviz运行时
 ### 没有gui控制关节
 display.launch中<gui default="False" />修改为True
@@ -90,12 +98,17 @@ sudo apt-get install ros-melodic-gazebo-ros-control
 ```
 sudo apt-get install ros-melodic-effort-controllers
 ```
+### 找不到fake_localization
+```
+sudo apt-get install ros-melodic-fake-localization
+```
 ### 警告new node registered with same name
 节点名称冲突，删去gazebo.launch中的<include file="$(find pr2_controller_manager)/controller_manager.launch" />
 ### 警告找不到api.ignitionfuel.org
 home/.ignition/fuel/config.yaml中的URL行的api.ignitionfuel.org修改为api.ignitionrobotics.org
 ### 小车各个零部件固定在原点一动不动，或者小车狂舞乱飞无法无天
 质量、摩擦力设置不当（可能过小）
+PID参数设置有误，car_control.yaml中修改
 ### 报错cmd /opt/ros/melodic/lib/gazebo_ros/spawn_model
 gazebo.launch中$(find car_model)/robots/car_model.URDF-urdf -model car_model"中间加个空格
 ### 新建gazebo添加模型
@@ -109,6 +122,12 @@ rosrun gazebo_ros spawn_model -file $(find car_model)/robots/car_model.URDF -urd
 使用xacro
 ```
 rosrun gazebo_ros spawn_model -file $(find car_model)/robots/car_model.xacro -xacro -z 1 -model car_model.xacro
+```
+### 找不到teleop_twist_keyboard
+```
+sudo apt-get install ros-melodic-teleop-twist-keyboard
+rosstack profile
+rospack profile
 ```
 ***
 # 附加信息

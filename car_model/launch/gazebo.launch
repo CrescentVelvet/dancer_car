@@ -1,23 +1,41 @@
 <launch>
-  <include
-    file="$(find gazebo_ros)/launch/empty_world.launch" />
-  <param
-    name="robot_description"
+
+  <include file="$(find gazebo_ros)/launch/empty_world.launch" />
+
+  <arg name="gui" value="True" />
+
+  <param name="robot_description"
     command="$(find xacro)/xacro --inorder '$(find car_model)/robots/car_model.xacro'" />
-  <node
-    name="tf_footprint_base"
+
+  <param name="use_gui" value="$(arg gui)" />
+
+  <node name="tf_footprint_base"
     pkg="tf"
     type="static_transform_publisher"
     args="0 0 0 0 0 0 base_link base_footprint 40" />
-  <node
-    name="spawn_model"
+
+  <node name="robot_state_publisher"
+    pkg="robot_state_publisher"
+    type="robot_state_publisher" />
+
+  <node name="spawn_model"
     pkg="gazebo_ros"
     type="spawn_model"
     args="-urdf -model car_model -param robot_description"
     output="screen" />
-  <node
-    name="fake_joint_calibration"
+
+  <node name="fake_joint_calibration"
     pkg="rostopic"
     type="rostopic"
     args="pub /calibrated std_msgs/Bool true" />
+
+  <node pkg="fake_localization" 
+    type="fake_localization" 
+    name="fake_localization" 
+    clear_params="true" output="screen">
+    <remap from="base_pose_ground_truth" to="odom" />
+    <param name="global_frame_id" value="map" />
+    <param name="base_frame_id" value="base_link" />
+  </node>
+
 </launch>
