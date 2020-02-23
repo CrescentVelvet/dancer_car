@@ -9,45 +9,71 @@ cd ~/catkin_ws/src
 catkin_make
 source devel/setup.bash
 ```
-## rviz中运行
+## rviz中运行（查看模型）
 ```
 roslaunch car_model display.launch
 ```
 Add RobotModule和camera，修改Fixed Frame为world_link，可以在gui上控制关节转动
-## gazebo中运行
+## gazebo中运行（加载场景地图）
+将car_model中worlds中的car_world.jpg复制进/usr/share/gazebo-9/media/material/textures中，
+
+将car_model中worlds中的gazebo.material复制进/usr/share/gazebo-9/media/material/scripts中。
+## gazebo中运行（控制小车运动）
 ```
 roslaunch car_model gazebo.launch
 ```
 View Axis和Interia.gazebo运行时在rviz中camera的ImageTopic设置为camera
 
-可以看见相机图像
-## control启动
+可以看见相机图像。
+
+   U    I    O
+
+   J    K    L
+
+   M    <    >
+
+控制前进后退与转弯
+
+q/z : increase/decrease max speeds by 10%
+
+w/x : increase/decrease only linear speed by 10%
+
+e/c : increase/decrease only angular speed by 10%
+
+控制加速减速与角度
+
+## control启动（控制吊杆运动）
 ```
 roslaunch car_control robot_control.launch
 ```
-## 手动输入指令
+
+### 可以手动输入指令
+
 ```
 rostopic pub -1 /car_model/joint_column_link1_controller/command std_msgs/Float64 "data: 1.5"
 rostopic pub -1 /car_model/joint_column_link2_controller/command std_msgs/Float64 "data: 1.5"
 rostopic pub -1 /car_model/joint_column_link3_controller/command std_msgs/Float64 "data: 1.5"
 ```
 输入指令为转动关节角度的弧度值[-PI,PI]
-## rqt发布指令控制杆子转动
+### 也可以使用rqt发布指令
 ```
 rosrun rqt_gui rqt_gui
 ```
 在Topics中选择Message Publisher，
+
 添加/car_model/joint_column_link1_controller/command
+
 设置frequency为100Hz，设置data为sin(i/100)
+
 添加/car_model/joint_column_link2_controller/command
+
 设置frequency为100Hz，设置data为sin(i/100)*3
+
 添加/car_model/joint_column_link3_controller/command
+
 设置frequency为100Hz，设置data为sin(i/50)
+
 在前面的框中打钩，控制杆子转动
-## 键盘控制小车移动
-```
-rosrun teleop_twist_keyboard teleop_twist_keyboard.py 
-```
 
 ***
 # 错误提示
@@ -84,8 +110,11 @@ killall gzserver
 ```
 ### 找不到robot_description
 gazebo.launch中中添加
+
 使用urdf：<param name="robot_description" textfile="$(find car_model)/robots/car_model.URDF"/>
+
 使用xacro：<param name="robot_description" command="$(find xacro)/xacro --inorder '$(find car_model)/robots/car_model.xacro'" />
+
 ### 警告KDL does not support a root link with an inertia
 给root link添加一个不具有inertia的parent
 ### 警告Deprecated syntax

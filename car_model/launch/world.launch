@@ -1,3 +1,4 @@
+<?xml version="1.0" ?>
 <launch>
 
   <include file="$(find gazebo_ros)/launch/empty_world.launch">
@@ -28,25 +29,6 @@
     pkg="gazebo_ros"
     type="spawn_model"
     args="-urdf -model car_model -param robot_description"
-    output="screen" />
-
-  <node name="fake_joint_calibration"
-    pkg="rostopic"
-    type="rostopic"
-    args="pub /calibrated std_msgs/Bool true" />
-
-  <node pkg="fake_localization" 
-    type="fake_localization" 
-    name="fake_localization" 
-    clear_params="true" output="screen">
-    <remap from="base_pose_ground_truth" to="odom" />
-    <param name="global_frame_id" value="map" />
-    <param name="base_frame_id" value="base_link" />
-  </node>
-
-  <node name="control_vel"
-    pkg="teleop_twist_keyboard"
-    type="teleop_twist_keyboard.py"
     output="screen" />
 
 </launch>
