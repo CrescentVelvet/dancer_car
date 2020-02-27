@@ -6,20 +6,23 @@ car_model:
 
   # Position Controllers ---------------------------------------
   joint_column_link1_controller:
-    type: position_controllers/JointPositionController
+    type: effort_controllers/JointPositionController
     joint: joint_column_link1
+    pid: {p: 10.0, i: 0.01, d: 0}
   joint_column_link2_controller:
-    type: position_controllers/JointPositionController
+    type: effort_controllers/JointPositionController
     joint: joint_column_link2
+    pid: {p: 10.0, i: 0.01, d: 0}
   joint_column_link3_controller:
-    type: position_controllers/JointPositionController
+    type: effort_controllers/JointPositionController
     joint: joint_column_link3
+    pid: {p: 10.0, i: 0.01, d: 0}
 
   # parameters for Gazebo ROS control plugin
-  gazebo_ros_control/pid_gains:
-    joint_column_link1_controller: {p: 100.0, i: 0.01, d: 10.0}
-    joint_column_link2_controller: {p: 100.0, i: 0.01, d: 10.0}
-    joint_column_link3_controller: {p: 100.0, i: 0.01, d: 10.0}
+#  /gazebo_ros_control/pid_gains:
+#    joint_column_link1: {p: 10.0, i: 0.01, d: 0}
+#    joint_column_link2: {p: 10.0, i: 0.01, d: 0}
+#    joint_column_link3: {p: 10.0, i: 0.01, d: 0}
 
 #  joint_column_link1_controller:
 #    type: position_controllers/JointPositionController
@@ -50,3 +53,10 @@ car_model:
 #    type: effort_controllers/JointEffortController
 #    joint: joint_left_back_wheel
 #    pid: {p: 10, i: 0.01, d: 0}
+
+#  column_controller:
+#    tyoe: position_controllers/JointGroupPositionController
+#    joints:
+#      - joint_column_link1
+#      - joint_column_link2
+#      - joint_column_link3

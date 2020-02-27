@@ -15,22 +15,20 @@
   <arg name="gui" default="true"/>
   <param name="use_gui" value="$(arg gui)" />
 
+<!-- car model -->
+  <node name="spawn_model"
+    pkg="gazebo_ros"
+    type="spawn_model"
+    args="-urdf -model car_model -param robot_description"
+    respawn="false"
+    output="screen" />
+
   <node name="tf_footprint_base"
     pkg="tf"
     type="static_transform_publisher"
     args="0 0 0 0 0 0 base_link base_footprint 40" />
 
-  <node name="robot_state_publisher"
-    pkg="robot_state_publisher"
-    type="robot_state_publisher" />
-
-  <node name="spawn_model"
-    pkg="gazebo_ros"
-    type="spawn_model"
-    args="-urdf -model car_model -param robot_description"
-    output="screen" />
-
-  <node name="fake_joint_calibration"
+  <!--<node name="fake_joint_calibration"
     pkg="rostopic"
     type="rostopic"
     args="pub /calibrated std_msgs/Bool true" />
@@ -42,11 +40,34 @@
     <remap from="base_pose_ground_truth" to="odom" />
     <param name="global_frame_id" value="map" />
     <param name="base_frame_id" value="base_link" />
-  </node>
+  </node>-->
 
+<!-- column control -->
+  <rosparam file="$(find car_model)/config/car_control.yaml" command="load"/>
+  <node name="joint_controller_spawner" 
+    pkg="controller_manager" 
+    type="spawner" 
+    respawn="false"
+    output="screen" 
+    ns="/car_model" 
+    args="joint_state_controller 
+          joint_column_link1_controller 
+          joint_column_link2_controller
+          joint_column_link3_controller"/>
+
+<!-- vel control -->
   <node name="control_vel"
-    pkg="teleop_twist_keyboard"
-    type="teleop_twist_keyboard.py"
+    pkg="car_keyboard"
+    type="car_keyboard.py"
     output="screen" />
+
+<!-- car state -->
+  <node name="robot_state_publisher"
+    pkg="robot_state_publisher"
+    type="robot_state_publisher"
+    respawn="false"
+    output="screen" >
+    <!--<remap from="/joint_states" to="/car_model/joint_states" />-->
+  </node>
 
 </launch>

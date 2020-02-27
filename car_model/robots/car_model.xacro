@@ -10,8 +10,8 @@
   <xacro:property name="wheel_lenth" value="0.02" />
   <xacro:property name="wheel_radius" value="0.025" />
   <xacro:property name="column_width" value="0.02" />
-  <xacro:property name="column_height1" value="0.2" />
-  <xacro:property name="column_height2" value="0.1" />
+  <xacro:property name="column_height1" value="0.05" />
+  <xacro:property name="column_height2" value="0.2" />
   <xacro:property name="column_height3" value="0.05" />
   <xacro:property name="column_mass" value="0.1" />
   <xacro:property name="camera_width" value="0.025" />
@@ -342,8 +342,9 @@
 
   </link>
 
+  <!-- #################### -->
   <joint name="joint_column_link1" type="continuous">
-    <axis xyz="0 1 0" rpy="0 0 0" />
+    <axis xyz="0 0 1" rpy="0 0 0" />
     <parent link="car_body" />
     <child link="column_link1" />
     <origin xyz="${car_a/2-column_width} 0 ${car_c}" />
@@ -441,6 +442,7 @@
 
   </link>
 
+  <!-- #################### -->
   <joint name="joint_column_link3" type="continuous">
     <axis xyz="0 0 1" rpy="0 0 0" />
     <parent link="column_link2" />
@@ -480,7 +482,7 @@
 
   <!-- #################### -->
   <joint name="joint_camera_link" type="fixed">
-    <origin xyz="0 0 ${column_height3}" rpy="${-PI/2} 0 ${-PI/2}"/>
+    <origin xyz="0 0 ${column_height3}" rpy="0 ${-PI/2} 0"/>
     <parent link="column_link3"/>
     <child link="camera_link"/>
   </joint>
@@ -543,6 +545,7 @@
     <actuator name="motor_column_link1">
       <hardwareInterface>hardware_interface/EffortJointInterface</hardwareInterface>
       <mechanicalReduction>1</mechanicalReduction>
+      <motorTorqueConstant>1</motorTorqueConstant>
     </actuator>
   </transmission>
 
@@ -555,6 +558,7 @@
     <actuator name="motor_column_link2">
       <hardwareInterface>hardware_interface/EffortJointInterface</hardwareInterface>
       <mechanicalReduction>1</mechanicalReduction>
+      <motorTorqueConstant>1</motorTorqueConstant>
     </actuator>
   </transmission>
 
@@ -567,6 +571,7 @@
     <actuator name="motor_column_link3">
       <hardwareInterface>hardware_interface/EffortJointInterface</hardwareInterface>
       <mechanicalReduction>1</mechanicalReduction>
+      <motorTorqueConstant>1</motorTorqueConstant>
     </actuator>
   </transmission>
 

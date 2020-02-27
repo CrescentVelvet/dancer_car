@@ -18,7 +18,7 @@ Add RobotModule和camera，修改Fixed Frame为world_link，可以在gui上控�
 将car_model中worlds中的car_world.jpg复制进/usr/share/gazebo-9/media/material/textures中，
 
 将car_model中worlds中的gazebo.material复制进/usr/share/gazebo-9/media/material/scripts中。
-## gazebo中运行（控制小车运动）
+## gazebo中运行（键盘控制小车）
 ```
 roslaunch car_model gazebo.launch
 ```
@@ -26,28 +26,36 @@ View Axis和Interia.gazebo运行时在rviz中camera的ImageTopic设置为camera
 
 可以看见相机图像。
 
-   U    I    O
+控制前进后退与转弯:
 
-   J    K    L
+   u    i    o
 
-   M    <    >
+   j    k    l
 
-控制前进后退与转弯
+   m    <    >
 
-q/z : increase/decrease max speeds by 10%
 
-w/x : increase/decrease only linear speed by 10%
+控制加速减速与角度:
 
-e/c : increase/decrease only angular speed by 10%
+q/a : increase/decrease only linear  speed by 10%
 
-控制加速减速与角度
+w/s : increase/decrease only angular speed by 10%
 
-## control启动（控制吊杆运动）
+
+控制三根杆子运动：
+
+   r   t
+
+   f   g
+
+   v   b
+
+## control启动（控制吊杆运动）（无用）
 ```
 roslaunch car_control robot_control.launch
 ```
 
-### 可以手动输入指令
+### 可以手动输入指令（无用）
 
 ```
 rostopic pub -1 /car_model/joint_column_link1_controller/command std_msgs/Float64 "data: 1.5"
@@ -55,7 +63,7 @@ rostopic pub -1 /car_model/joint_column_link2_controller/command std_msgs/Float6
 rostopic pub -1 /car_model/joint_column_link3_controller/command std_msgs/Float64 "data: 1.5"
 ```
 输入指令为转动关节角度的弧度值[-PI,PI]
-### 也可以使用rqt发布指令
+### 也可以使用rqt发布指令（无用）
 ```
 rosrun rqt_gui rqt_gui
 ```
@@ -133,8 +141,10 @@ sudo apt-get install ros-melodic-fake-localization
 ```
 ### 警告new node registered with same name
 节点名称冲突，删去gazebo.launch中的<include file="$(find pr2_controller_manager)/controller_manager.launch" />
-### 警告找不到api.ignitionfuel.org
+### 警告找不到api.ignitionfuel.org或报错Error in REST request
 home/.ignition/fuel/config.yaml中的URL行的api.ignitionfuel.org修改为api.ignitionrobotics.org
+### 报错节点冲突new node registered with same name
+gazebo.launch中删去<include file="$(find pr2_controller_manager)/controller_manager.launch" />
 ### 小车各个零部件固定在原点一动不动，或者小车狂舞乱飞无法无天
 质量、摩擦力设置不当（可能过小）
 PID参数设置有误，car_control.yaml中修改
@@ -158,6 +168,7 @@ sudo apt-get install ros-melodic-teleop-twist-keyboard
 rosstack profile
 rospack profile
 ```
+现已加入car_keyboard
 ***
 # 附加信息
 ## SolidWorks生成urdf模型
