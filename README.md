@@ -28,11 +28,11 @@ View Axis和Interia.gazebo运行时在rviz中camera的ImageTopic设置为camera
 
 控制前进后退与转弯:
 
-   u    i    o
+   u            i            o
 
-   j    k    l
+   j            k            l
 
-   m    <    >
+   m            <            >
 
 
 控制加速减速与角度:
@@ -44,11 +44,11 @@ w/s : increase/decrease only angular speed by 10%
 
 控制三根杆子运动：
 
-   r   t
+   r            t
 
-   f   g
+   f            g
 
-   v   b
+   v            b
 
 ## control启动（控制吊杆运动）（无用）
 ```
